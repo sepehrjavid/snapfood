@@ -47,3 +47,23 @@ class AddFoodShopView(APIView):
                 return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(food.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class RemoveFoodShopView(APIView):
+    def post(self, request):
+        try:
+            admin = validateAdminToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        data = request.data
+        if data.get("foodId") is None:
+            return Response({"detail": "foodId is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        shopFoods = admin.shop.foods
+
+        for food in shopFoods:
+            if data.get("foodId") == food.foodId:
+                food.delete()
+                return Response(status=status.HTTP_200_OK)
+        return Response({"detail": "food not found"}, status=status.HTTP_404_NOT_FOUND)

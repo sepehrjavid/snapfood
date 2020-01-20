@@ -87,6 +87,17 @@ class Food(object):
         else:
             raise NotValidatedException
 
+    def delete(self):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.foodId,)
+                cursor.execute(
+                    "DELETE FROM Food WHERE foodId=%s;",
+                    recordValue
+                )
+            except Exception as ex:
+                raise ex
+
     @property
     def data(self):
         return {
@@ -138,8 +149,20 @@ class Shop(object):
             except Exception as ex:
                 raise ex
 
-    def getShopsByCategory(self):
-        pass
+    @property
+    def foods(self):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.shopId,)
+                cursor.execute(
+                    "SELECT Food.* FROM Shop INNER JOIN Food ON Food.shopId = Shop.shopId WHERE Shop.shopId=%s;",
+                    recordValue
+                )
+                result = cursor.fetchall()
+                return [Food(foodId=food[0], price=food[1], about=food[2], name=food[3], discount=food[4],
+                             categoryId=food[5], shopId=food[6]) for food in result]
+            except Exception as ex:
+                raise ex
 
     @property
     def data(self):
