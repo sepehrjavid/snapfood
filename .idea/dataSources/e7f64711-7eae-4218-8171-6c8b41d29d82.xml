@@ -1,0 +1,576 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="db.sqlite3">
+  <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.16">
+    <root id="1">
+      <ServerVersion>3.25.1</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="main">
+      <Current>1</Current>
+    </schema>
+    <collation id="3" parent="1" name="BINARY"/>
+    <collation id="4" parent="1" name="NOCASE"/>
+    <collation id="5" parent="1" name="RTRIM"/>
+    <table id="6" parent="2" name="Address"/>
+    <table id="7" parent="2" name="Admin"/>
+    <table id="8" parent="2" name="Cart"/>
+    <table id="9" parent="2" name="Cart_Food_Isin"/>
+    <table id="10" parent="2" name="Category"/>
+    <table id="11" parent="2" name="City"/>
+    <table id="12" parent="2" name="Comment"/>
+    <table id="13" parent="2" name="Discount"/>
+    <table id="14" parent="2" name="Food"/>
+    <table id="15" parent="2" name="Food_Invoice_Isin"/>
+    <table id="16" parent="2" name="Invoice"/>
+    <table id="17" parent="2" name="Location"/>
+    <table id="18" parent="2" name="Shop"/>
+    <table id="19" parent="2" name="Status"/>
+    <table id="20" parent="2" name="User"/>
+    <table id="21" parent="2" name="User_Discount_Has"/>
+    <table id="22" parent="2" name="User_Shop_Favorite"/>
+    <table id="23" parent="2" name="Wallet"/>
+    <table id="24" parent="2" name="sqlite_master">
+      <System>1</System>
+    </table>
+    <table id="25" parent="2" name="sqlite_sequence">
+      <System>1</System>
+    </table>
+    <column id="26" parent="6" name="cityId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="27" parent="6" name="addressId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="28" parent="6" name="locationId">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="29" parent="6" name="address_text">
+      <Position>4</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="30" parent="6" name="userId">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <index id="31" parent="6" name="Address_locationId_uindex">
+      <ColNames>locationId</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="32" parent="6" name="Address_pk">
+      <ColNames>addressId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="33" parent="6">
+      <ColNames>cityId</ColNames>
+      <RefTableName>City</RefTableName>
+      <RefKeyName>City_pk</RefKeyName>
+      <RefColNames>cityId</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="34" parent="6">
+      <ColNames>locationId</ColNames>
+      <RefTableName>Location</RefTableName>
+      <RefKeyName>Location_pk</RefKeyName>
+      <RefColNames>locationId</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <foreign-key id="35" parent="6">
+      <ColNames>userId</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefKeyName>User_pk</RefKeyName>
+      <RefColNames>userId</RefColNames>
+    </foreign-key>
+    <column id="36" parent="7" name="username">
+      <Position>1</Position>
+      <DataType>varchar(40)|0s</DataType>
+    </column>
+    <column id="37" parent="7" name="password">
+      <Position>2</Position>
+      <DataType>varchar(40)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="38" parent="7" name="shopId">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="39" parent="7" name="sqlite_autoindex_Admin_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>username</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="40" parent="7" name="Admin_shopId_uindex">
+      <ColNames>shopId</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="41" parent="7" name="Admin_pk">
+      <ColNames>username</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>sqlite_autoindex_Admin_1</UnderlyingIndexName>
+    </key>
+    <foreign-key id="42" parent="7">
+      <ColNames>shopId</ColNames>
+      <RefTableName>Shop</RefTableName>
+      <RefKeyName>Shop_pk</RefKeyName>
+      <RefColNames>shopId</RefColNames>
+    </foreign-key>
+    <column id="43" parent="8" name="cartId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="44" parent="8" name="userId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="45" parent="8" name="Cart_userId_uindex">
+      <ColNames>userId</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="46" parent="8" name="Cart_pk">
+      <ColNames>cartId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="47" parent="8">
+      <ColNames>userId</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefKeyName>User_pk</RefKeyName>
+      <RefColNames>userId</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="48" parent="9" name="foodId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="49" parent="9" name="cartId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <foreign-key id="50" parent="9">
+      <ColNames>foodId</ColNames>
+      <RefTableName>Food</RefTableName>
+      <RefKeyName>Food_pk</RefKeyName>
+      <RefColNames>foodId</RefColNames>
+    </foreign-key>
+    <foreign-key id="51" parent="9">
+      <ColNames>cartId</ColNames>
+      <RefTableName>Cart</RefTableName>
+      <RefKeyName>Cart_pk</RefKeyName>
+      <RefColNames>cartId</RefColNames>
+    </foreign-key>
+    <column id="52" parent="10" name="categoryId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="53" parent="10" name="name">
+      <Position>2</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="54" parent="10" name="Category_pk">
+      <ColNames>categoryId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="55" parent="11" name="cityId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="56" parent="11" name="name">
+      <Position>2</Position>
+      <DataType>varchar(20)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="57" parent="11" name="City_pk">
+      <ColNames>cityId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="58" parent="12" name="commentId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="59" parent="12" name="text">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="60" parent="12" name="rate">
+      <Position>3</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="61" parent="12" name="Comment_pk">
+      <ColNames>commentId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="62" parent="13" name="discountId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="63" parent="13" name="present">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="64" parent="13" name="text">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="65" parent="13" name="Discount_pk">
+      <ColNames>discountId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="66" parent="14" name="foodId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="67" parent="14" name="price">
+      <Position>2</Position>
+      <DataType>int|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="68" parent="14" name="about">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="69" parent="14" name="name">
+      <Position>4</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="70" parent="14" name="discount">
+      <Position>5</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="71" parent="14" name="categoryId">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="72" parent="14" name="shopId">
+      <Position>7</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="73" parent="14" name="Food_pk">
+      <ColNames>foodId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="74" parent="14">
+      <ColNames>categoryId</ColNames>
+      <RefTableName>Category</RefTableName>
+      <RefKeyName>Category_pk</RefKeyName>
+      <RefColNames>categoryId</RefColNames>
+    </foreign-key>
+    <foreign-key id="75" parent="14">
+      <ColNames>shopId</ColNames>
+      <RefTableName>Shop</RefTableName>
+      <RefKeyName>Shop_pk</RefKeyName>
+      <RefColNames>shopId</RefColNames>
+      <OnDelete>restrict</OnDelete>
+    </foreign-key>
+    <column id="76" parent="15" name="foodId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="77" parent="15" name="invoiceId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <foreign-key id="78" parent="15">
+      <ColNames>foodId</ColNames>
+      <RefTableName>Food</RefTableName>
+      <RefKeyName>Food_pk</RefKeyName>
+      <RefColNames>foodId</RefColNames>
+    </foreign-key>
+    <foreign-key id="79" parent="15">
+      <ColNames>invoiceId</ColNames>
+      <RefTableName>Invoice</RefTableName>
+      <RefKeyName>Invoice_pk</RefKeyName>
+      <RefColNames>invoiceId</RefColNames>
+    </foreign-key>
+    <column id="80" parent="16" name="invoiceId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="81" parent="16" name="dicountId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <column id="82" parent="16" name="commentId">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <column id="83" parent="16" name="statusId">
+      <Position>4</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="84" parent="16" name="walletId">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+    </column>
+    <column id="85" parent="16" name="addressId">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="86" parent="16" name="Invoice_pk">
+      <ColNames>invoiceId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="87" parent="16">
+      <ColNames>dicountId</ColNames>
+      <RefTableName>Discount</RefTableName>
+      <RefKeyName>Discount_pk</RefKeyName>
+      <RefColNames>discountId</RefColNames>
+    </foreign-key>
+    <foreign-key id="88" parent="16">
+      <ColNames>commentId</ColNames>
+      <RefTableName>Comment</RefTableName>
+      <RefKeyName>Comment_pk</RefKeyName>
+      <RefColNames>commentId</RefColNames>
+    </foreign-key>
+    <foreign-key id="89" parent="16">
+      <ColNames>statusId</ColNames>
+      <RefTableName>Status</RefTableName>
+      <RefKeyName>Status_pk</RefKeyName>
+      <RefColNames>statusId</RefColNames>
+    </foreign-key>
+    <foreign-key id="90" parent="16">
+      <ColNames>walletId</ColNames>
+      <RefTableName>Wallet</RefTableName>
+      <RefKeyName>Wallet_pk</RefKeyName>
+      <RefColNames>walletId</RefColNames>
+    </foreign-key>
+    <foreign-key id="91" parent="16">
+      <ColNames>addressId</ColNames>
+      <RefTableName>Address</RefTableName>
+      <RefKeyName>Address_pk</RefKeyName>
+      <RefColNames>addressId</RefColNames>
+    </foreign-key>
+    <column id="92" parent="17" name="locationId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="93" parent="17" name="x">
+      <Position>2</Position>
+      <DataType>varchar(40)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="94" parent="17" name="y">
+      <Position>3</Position>
+      <DataType>varchar(40)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="95" parent="17" name="Location_pk">
+      <ColNames>locationId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="96" parent="18" name="shopId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="97" parent="18" name="about_text">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="98" parent="18" name="name">
+      <Position>3</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="99" parent="18" name="minimum_bill_value">
+      <Position>4</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="100" parent="18" name="addressId">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="101" parent="18" name="Shop_pk">
+      <ColNames>shopId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="102" parent="18">
+      <ColNames>addressId</ColNames>
+      <RefTableName>Address</RefTableName>
+      <RefKeyName>Address_pk</RefKeyName>
+      <RefColNames>addressId</RefColNames>
+    </foreign-key>
+    <column id="103" parent="19" name="statusId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="104" parent="19" name="name">
+      <Position>2</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="105" parent="19" name="Status_pk">
+      <ColNames>statusId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="106" parent="20" name="password">
+      <Position>1</Position>
+      <DataType>varchar(30)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="107" parent="20" name="first_name">
+      <Position>2</Position>
+      <DataType>varchar(30)|0s</DataType>
+    </column>
+    <column id="108" parent="20" name="last_name">
+      <Position>3</Position>
+      <DataType>varchar(30)|0s</DataType>
+    </column>
+    <column id="109" parent="20" name="phone_number">
+      <Position>4</Position>
+      <DataType>varchar(11)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="110" parent="20" name="email">
+      <Position>5</Position>
+      <DataType>varchar(80)|0s</DataType>
+    </column>
+    <column id="111" parent="20" name="userId">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <index id="112" parent="20" name="User_phone_number_uindex">
+      <ColNames>phone_number</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="113" parent="20" name="User_email_uindex">
+      <ColNames>email</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="114" parent="20" name="User_pk">
+      <ColNames>userId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="115" parent="21" name="userId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="116" parent="21" name="discountId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <foreign-key id="117" parent="21">
+      <ColNames>userId</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefKeyName>User_pk</RefKeyName>
+      <RefColNames>userId</RefColNames>
+    </foreign-key>
+    <foreign-key id="118" parent="21">
+      <ColNames>discountId</ColNames>
+      <RefTableName>Discount</RefTableName>
+      <RefKeyName>Discount_pk</RefKeyName>
+      <RefColNames>discountId</RefColNames>
+    </foreign-key>
+    <column id="119" parent="22" name="shopId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="120" parent="22" name="userId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <foreign-key id="121" parent="22">
+      <ColNames>shopId</ColNames>
+      <RefTableName>Shop</RefTableName>
+      <RefKeyName>Shop_pk</RefKeyName>
+      <RefColNames>shopId</RefColNames>
+    </foreign-key>
+    <foreign-key id="122" parent="22">
+      <ColNames>userId</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefKeyName>User_pk</RefKeyName>
+      <RefColNames>userId</RefColNames>
+    </foreign-key>
+    <column id="123" parent="23" name="walletId">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="124" parent="23" name="userId">
+      <Position>2</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="125" parent="23" name="Wallet_userId_uindex">
+      <ColNames>userId</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="126" parent="23" name="Wallet_pk">
+      <ColNames>walletId</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <foreign-key id="127" parent="23">
+      <ColNames>userId</ColNames>
+      <RefTableName>User</RefTableName>
+      <RefKeyName>User_pk</RefKeyName>
+      <RefColNames>userId</RefColNames>
+      <OnDelete>cascade</OnDelete>
+    </foreign-key>
+    <column id="128" parent="24" name="type">
+      <Position>1</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="129" parent="24" name="name">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="130" parent="24" name="tbl_name">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="131" parent="24" name="rootpage">
+      <Position>4</Position>
+      <DataType>int|0s</DataType>
+    </column>
+    <column id="132" parent="24" name="sql">
+      <Position>5</Position>
+      <DataType>text|0s</DataType>
+    </column>
+    <column id="133" parent="25" name="name">
+      <Position>1</Position>
+    </column>
+    <column id="134" parent="25" name="seq">
+      <Position>2</Position>
+    </column>
+  </database-model>
+</dataSource>
