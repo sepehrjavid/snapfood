@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from django.db import connection
 
 from accounting.services import User
-from snapfood.exceptions import ValidationError, ObjectNotFoundException
+from snapfood.exceptions import ValidationError, ObjectNotFoundException, ObjectAlreadyExistsException
 from snapfood.jwt import getUserToken, validateUserToken
 
 
@@ -117,6 +117,28 @@ class AddUserFavoriteView(APIView):
 
         try:
             user.addFavorite(data.get("shopId"))
+        except ObjectNotFoundException as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+        except ObjectAlreadyExistsException as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_200_OK)
+
+
+class RemoveUserFavoriteView(APIView):
+    def post(self, request):
+        try:
+            user = validateUserToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        data = request.data
+
+        if data.get("shopId") is None:
+            return Response({"detail": "shopId is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            user.removeFavorite(data.get("shopId"))
         except ObjectNotFoundException as ex:
             return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
 

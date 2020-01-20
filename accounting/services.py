@@ -2,7 +2,8 @@ from django.db import connection
 
 from address.services import Address
 from shops.services import Food, Shop
-from snapfood.exceptions import NotValidatedException, NoValueForIdException, ObjectNotFoundException
+from snapfood.exceptions import NotValidatedException, NoValueForIdException, ObjectNotFoundException, \
+    ObjectAlreadyExistsException
 
 
 class Cart(object):
@@ -196,11 +197,36 @@ class User(object):
         if not shop:
             raise ObjectNotFoundException("shop not found")
 
+        favorites = self.favorites
+        for favorite in favorites:
+            if favorite.shopId == shopId:
+                raise ObjectAlreadyExistsException("shop already in favorite")
+
         with connection.cursor() as cursor:
             try:
                 recordValue = (shopId, self.userId)
                 cursor.execute(
                     "INSERT INTO User_Shop_Favorite (shopId, userId) VALUES (%s, %s);",
+                    recordValue
+                )
+            except Exception as ex:
+                raise ex
+
+    def removeFavorite(self, shopId):
+        target = -1
+        favorites = self.favorites
+        for favorite in favorites:
+            if favorite.shopId == shopId:
+                target = shopId
+
+        if target == -1:
+            raise ObjectNotFoundException("this shop is not in your favorites")
+
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (shopId, self.userId)
+                cursor.execute(
+                    "DELETE FROM User_Shop_Favorite WHERE shopId=%s AND userId=%s;",
                     recordValue
                 )
             except Exception as ex:

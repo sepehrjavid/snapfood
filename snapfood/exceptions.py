@@ -16,3 +16,8 @@ class ValidationError(Exception):
 class ObjectNotFoundException(Exception):
     def __init__(self, message):
         super(ObjectNotFoundException, self).__init__(message)
+
+
+class ObjectAlreadyExistsException(Exception):
+    def __init__(self, message):
+        super(ObjectAlreadyExistsException, self).__init__(message)
