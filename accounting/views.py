@@ -149,15 +149,18 @@ class Test(APIView):
     def get(self, request):
         with connection.cursor() as cursor:
             try:
-                cursor.execute(
-                    "INSERT INTO Category (name) VALUES ('Pizza');"
-                )
-                recordValue = ("slm", "naple", 100, 1)
+                # cursor.execute(
+                #     "DELETE FROM Category WHERE categoryId=2;"
+                # )
+                # cursor.execute(
+                #     "INSERT INTO Category (name) VALUES ('Lebanese');"
+                # )
+                recordValue = ("best food", "tabakh", 40, 3)
                 cursor.execute(
                     "INSERT INTO Shop (about_text, name, minimum_bill_value, addressId) VALUES (%s, %s, %s, %s);",
                     recordValue
                 )
-                recordValue = (52, "it has stake", "stake pizza", 1, 1)
+                recordValue = (20, "it's all good", "shaverma", 3, 3)
                 cursor.execute(
                     "INSERT INTO Food (price, about, name, categoryId, shopId) VALUES (%s, %s, %s, %s, %s);",
                     recordValue

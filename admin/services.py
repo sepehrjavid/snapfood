@@ -1,6 +1,6 @@
 from django.db import connection
 
-from shops.services import Shop
+from shops.services import Shop, Food
 from snapfood.exceptions import NotValidatedException
 
 
@@ -57,3 +57,16 @@ class Admin(object):
     @property
     def shop(self):
         return Shop.getShopById(self.shopId)
+
+    # def getShopComments(self):
+    #     with connection.cursor() as cursor:
+    #         try:
+    #             recordValue = (self.username, self.password)
+    #             cursor.execute(
+    #                 "SELECT * FROM Admin WHERE username=%s AND password=%s;", recordValue
+    #             )
+    #             if len(cursor.fetchall()) == 0:
+    #                 return False
+    #             return True
+    #         except Exception as ex:
+    #             raise ex

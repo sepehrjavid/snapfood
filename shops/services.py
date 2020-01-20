@@ -1,6 +1,7 @@
 from django.db import connection
 
 from address.services import Address
+from snapfood.exceptions import NotValidatedException
 
 
 class Food(object):
@@ -13,6 +14,8 @@ class Food(object):
         self.categoryId = kwargs.get("categoryId")
         self.shopId = kwargs.get("shopId")
         self.category = kwargs.get("category")
+        self.errors = []
+        self.isValidated = False
 
         if kwargs.get("categoryId") is not None:
             with connection.cursor() as cursor:
@@ -43,6 +46,46 @@ class Food(object):
                                 categoryId=food[5], shopId=food[6])
             except Exception as ex:
                 raise ex
+
+    def is_valid(self):
+        if self.name is None:
+            self.errors.append("name may not be null")
+            return False
+        if self.price is None:
+            self.errors.append("price may not be null")
+            return False
+        if self.categoryId is None:
+            self.errors.append("categoryId may not be null")
+            return False
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.categoryId,)
+                cursor.execute(
+                    "SELECT * FROM Category WHERE categoryId=%s;", recordValue
+                )
+                category = cursor.fetchall()
+            except Exception as ex:
+                raise ex
+        if not category:
+            self.errors.append("Category Not Valid")
+            return False
+        self.isValidated = True
+        return self.isValidated
+
+    def insert(self):
+        if self.isValidated:
+            with connection.cursor() as cursor:
+                try:
+                    recordValue = (self.price, self.about, self.name, self.discount, self.categoryId, self.shopId)
+                    cursor.execute(
+                        "INSERT INTO Food (price, about, name, discount, categoryId, shopId) VALUES \
+                            (%s, %s, %s, %s, %s, %s);",
+                        recordValue
+                    )
+                except Exception as ex:
+                    raise ex
+        else:
+            raise NotValidatedException
 
     @property
     def data(self):
@@ -94,6 +137,9 @@ class Shop(object):
                                 addressId=shop[4])
             except Exception as ex:
                 raise ex
+
+    def getShopsByCategory(self):
+        pass
 
     @property
     def data(self):
