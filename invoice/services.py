@@ -1,6 +1,7 @@
 from django.db import connection
 
 from address.services import Address
+from shops.services import Food
 from snapfood.exceptions import ValidationError
 
 
@@ -52,6 +53,22 @@ class Invoice(object):
                 raise ex
 
     @property
+    def foods(self):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.invoiceId,)
+                cursor.execute(
+                    "SELECT Food.* FROM Food INNER JOIN Food_Invoice_Isin FII on Food.foodId = FII.foodId \
+                    INNER JOIN Invoice I on FII.invoiceId = I.invoiceId WHERE I.invoiceId=%s;",
+                    recordValue
+                )
+                foods = cursor.fetchall()
+                return [Food(foodId=food[0], price=food[1], about=food[2], name=food[3], discount=food[4],
+                             categoryId=food[5], shopId=food[6]) for food in foods]
+            except Exception as ex:
+                raise ex
+
+    @property
     def comment(self):
         with connection.cursor() as cursor:
             try:
@@ -85,12 +102,14 @@ class Invoice(object):
                 "invoiceId": self.invoiceId,
                 "comment": self.comment.data,
                 "status": self.status,
-                "address": self.address.data
+                "address": self.address.data,
+                "foods": [x.data for x in self.foods]
             }
         return {
             "invoiceId": self.invoiceId,
             "status": self.status,
-            "address": self.address.data
+            "address": self.address.data,
+            "foods": [x.data for x in self.foods]
         }
 
     def addComment(self, text, rate):

@@ -38,3 +38,13 @@ class GetShopFoodView(APIView):
         foods = shop.foods
         out = {"foods": [x.data for x in foods], "categories": shop.categories}
         return Response(out, status=status.HTTP_200_OK)
+
+
+class SearchShopByNameView(APIView):
+    def get(self, request):
+        name = request.GET.get("name")
+        if name is None:
+            return Response({"detail": "Invalid parameter"}, status=status.HTTP_400_BAD_REQUEST)
+
+        shops = Shop.geShopByNameSearch(name)
+        return Response([x.data for x in shops], status=status.HTTP_200_OK)

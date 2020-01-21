@@ -48,3 +48,22 @@ class GetInvoiceDetailView(APIView):
             if invoice.invoiceId == int(invoiceId):
                 return Response(invoice.data, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "invoiceId is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetAllInvoicesView(APIView):
+    def get(self, request):
+        try:
+            user = validateUserToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        userInvoices = user.invoices
+        out = []
+        for invoice in userInvoices:
+            price = 0
+            out.append(invoice.data)
+            for food in invoice.foods:
+                price += food.price
+            out[-1]["totalPrice"] = price
+
+        return Response(out, status=status.HTTP_200_OK)

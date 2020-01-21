@@ -204,22 +204,6 @@ class Shop(object):
                 raise ex
 
     @staticmethod
-    def getShopByCity(city):
-        with connection.cursor() as cursor:
-            try:
-                recordValue = (city,)
-                cursor.execute(
-                    "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
-                    INNER JOIN City C on A.cityId = C.cityId WHERE C.name=%s;",
-                    recordValue
-                )
-                result = cursor.fetchall()
-                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
-                             addressId=shop[4]) for shop in result]
-            except Exception as ex:
-                raise ex
-
-    @staticmethod
     def _getQuery(key):
         if key == "category":
             return "SELECT DISTINCT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId \
@@ -247,6 +231,20 @@ class Shop(object):
                 cursor.execute(
                     query,
                     recordValue
+                )
+                result = cursor.fetchall()
+                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
+                             addressId=shop[4]) for shop in result]
+            except Exception as ex:
+                raise ex
+
+    @staticmethod
+    def geShopByNameSearch(name):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = ("%" + name + "%",)
+                cursor.execute(
+                    "SELECT * FROM Shop WHERE name LIKE %s;", recordValue
                 )
                 result = cursor.fetchall()
                 return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
