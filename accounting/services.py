@@ -1,6 +1,7 @@
 from django.db import connection
 
 from address.services import Address
+from invoice.services import Invoice
 from shops.services import Food, Shop
 from snapfood.exceptions import NotValidatedException, NoValueForIdException, ObjectNotFoundException, \
     ObjectAlreadyExistsException, InsertNotAllowedException
@@ -203,8 +204,22 @@ class User(object):
                         locationId=address[2],
                         address_text=address[3]) for address in addresses]
 
-    def getOrders(self):
-        pass
+    @property
+    def invoices(self):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.wallet.walletId,)
+                cursor.execute(
+                    "SELECT * FROM Invoice WHERE walletId=%s;",
+                    recordValue
+                )
+                invoices = cursor.fetchall()
+                return [Invoice(invoiceId=invoice[0], discountId=invoice[1], commentId=invoice[2], statusId=invoice[3],
+                                walletId=invoice[4], addressId=invoice[5])
+                        for invoice in invoices]
+            except Exception as ex:
+                raise ex
+        return
 
     @property
     def favorites(self):
