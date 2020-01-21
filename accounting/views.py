@@ -155,6 +155,9 @@ class CommitCartView(APIView):
         except ValidationError as ex:
             return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
 
+        if len(user.cart.foods) == 0:
+            return Response({"detail": "Cart may not be empty"}, status=status.HTTP_400_BAD_REQUEST)
+
         data = request.data
         if data.get("addressId") is None:
             return Response({"detail": "addressId is required"}, status=status.HTTP_400_BAD_REQUEST)

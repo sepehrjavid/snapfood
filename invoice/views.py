@@ -35,3 +35,16 @@ class CommentOnInvoiceView(APIView):
                 except ValidationError as ex:
                     return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
         return Response({"detail": "invoiceId is not valid"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class GetInvoiceDetailView(APIView):
+    def get(self, request, invoiceId):
+        try:
+            user = validateUserToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+        userInvoices = user.invoices
+        for invoice in userInvoices:
+            if invoice.invoiceId == int(invoiceId):
+                return Response(invoice.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"detail": "invoiceId is not valid"}, status=status.HTTP_400_BAD_REQUEST)

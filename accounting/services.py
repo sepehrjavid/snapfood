@@ -4,7 +4,7 @@ from address.services import Address
 from invoice.services import Invoice
 from shops.services import Food, Shop
 from snapfood.exceptions import NotValidatedException, NoValueForIdException, ObjectNotFoundException, \
-    ObjectAlreadyExistsException, InsertNotAllowedException
+    ObjectAlreadyExistsException, InsertNotAllowedException, ValidationError
 
 
 class Cart(object):

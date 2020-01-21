@@ -1,5 +1,6 @@
 from django.db import connection
 
+from address.services import Address
 from snapfood.exceptions import ValidationError
 
 
@@ -19,6 +20,14 @@ class Comment(object):
                 self.commentId = cursor.lastrowid
             except Exception as ex:
                 raise ex
+
+    @property
+    def data(self):
+        return {
+            "commentId": self.commentId,
+            "text": self.text,
+            "rate": self.rate
+        }
 
 
 class Invoice(object):
@@ -54,6 +63,35 @@ class Invoice(object):
                 return Comment(commentId=comment[0], text=comment[1], rate=comment[2])
             except Exception as ex:
                 raise ex
+
+    @property
+    def address(self):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.addressId,)
+                cursor.execute(
+                    "SELECT * FROM Address WHERE addressId=%s;", recordValue
+                )
+                result = cursor.fetchall()[0]
+                return Address(addressId=result[1], cityId=result[0], locationId=result[2],
+                               address_text=result[3])
+            except Exception as ex:
+                raise ex
+
+    @property
+    def data(self):
+        if self.commentId is not None:
+            return {
+                "invoiceId": self.invoiceId,
+                "comment": self.comment.data,
+                "status": self.status,
+                "address": self.address.data
+            }
+        return {
+            "invoiceId": self.invoiceId,
+            "status": self.status,
+            "address": self.address.data
+        }
 
     def addComment(self, text, rate):
         if self.commentId is not None:
