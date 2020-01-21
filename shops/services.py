@@ -132,52 +132,6 @@ class Shop(object):
                 except Exception as ex:
                     raise ex
 
-    @staticmethod
-    def getShopById(shopId):
-        with connection.cursor() as cursor:
-            try:
-                recordValue = (shopId,)
-                cursor.execute(
-                    "SELECT * FROM Shop WHERE shopId=%s;", recordValue
-                )
-                result = cursor.fetchall()
-                if not result:
-                    return []
-                else:
-                    shop = result[0]
-                    return Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
-                                addressId=shop[4])
-            except Exception as ex:
-                raise ex
-
-    @staticmethod
-    def getShopByCategory(query):
-        with connection.cursor() as cursor:
-            try:
-                recordValue = (query,)
-                cursor.execute(
-                    "SELECT DISTINCT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId \
-                    INNER JOIN Category C on F.categoryId = C.categoryId WHERE C.name=%s;", recordValue
-                )
-                result = cursor.fetchall()
-                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
-                             addressId=shop[4]) for shop in result]
-            except Exception as ex:
-                raise ex
-
-    @staticmethod
-    def getAllShops():
-        with connection.cursor() as cursor:
-            try:
-                cursor.execute(
-                    "SELECT * FROM Shop;"
-                )
-                result = cursor.fetchall()
-                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
-                             addressId=shop[4]) for shop in result]
-            except Exception as ex:
-                raise ex
-
     @property
     def foods(self):
         with connection.cursor() as cursor:
@@ -202,6 +156,88 @@ class Shop(object):
             "minimum_bill_value": self.minimum_bill_value,
             "address": self.address.data
         }
+
+    @staticmethod
+    def getShopById(shopId):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (shopId,)
+                cursor.execute(
+                    "SELECT * FROM Shop WHERE shopId=%s;", recordValue
+                )
+                result = cursor.fetchall()
+                if not result:
+                    return []
+                else:
+                    shop = result[0]
+                    return Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
+                                addressId=shop[4])
+            except Exception as ex:
+                raise ex
+
+    @staticmethod
+    def getAllShops():
+        with connection.cursor() as cursor:
+            try:
+                cursor.execute(
+                    "SELECT * FROM Shop;"
+                )
+                result = cursor.fetchall()
+                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
+                             addressId=shop[4]) for shop in result]
+            except Exception as ex:
+                raise ex
+
+    @staticmethod
+    def getShopByCity(city):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (city,)
+                cursor.execute(
+                    "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
+                    INNER JOIN City C on A.cityId = C.cityId WHERE C.name=%s;",
+                    recordValue
+                )
+                result = cursor.fetchall()
+                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
+                             addressId=shop[4]) for shop in result]
+            except Exception as ex:
+                raise ex
+
+    @staticmethod
+    def _getQuery(key):
+        if key == "category":
+            return "SELECT DISTINCT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId \
+                    INNER JOIN Category C on F.categoryId = C.categoryId WHERE C.name=%s;"
+        elif key == "name":
+            return "SELECT * FROM Shop WHERE name=%s;"
+        elif key == "city":
+            return "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
+                    INNER JOIN City C on A.cityId = C.cityId WHERE C.name=%s;"
+        elif key == "foodName":
+            return "SELECT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId WHERE F.name=%s;"
+        elif key == "territory":
+            return "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
+            INNER JOIN Location L on A.locationId = L.locationId WHERE L.x=%s AND L.y=%s;"
+
+    @staticmethod
+    def getShopsByQuery(key, value):
+        query = Shop._getQuery(key)
+        with connection.cursor() as cursor:
+            try:
+                if key == "territory":
+                    recordValue = (value.split()[0], value.split()[1])
+                else:
+                    recordValue = (value,)
+                cursor.execute(
+                    query,
+                    recordValue
+                )
+                result = cursor.fetchall()
+                return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
+                             addressId=shop[4]) for shop in result]
+            except Exception as ex:
+                raise ex
 
 
 class Category(object):
