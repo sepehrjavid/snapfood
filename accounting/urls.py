@@ -1,7 +1,7 @@
 from django.urls import path
 
-from accounting.views import SignupView, LoginView, Test, UserRetrieveView, UserUpdateView, GetUserCartView, \
-    AddFoodToCartView, GetUserFavoriteView, AddUserFavoriteView, RemoveUserFavoriteView
+from accounting.views import SignupView, LoginView, UserRetrieveView, UserUpdateView, GetUserCartView, \
+    AddFoodToCartView, GetUserFavoriteView, AddUserFavoriteView, RemoveUserFavoriteView, CommitCartView
 
 app_name = 'accounting'
 
@@ -15,5 +15,5 @@ urlpatterns = [
     path('GetUserFavorite', GetUserFavoriteView.as_view()),
     path('AddUserFavorite', AddUserFavoriteView.as_view()),
     path('RemoveUserFavorite', RemoveUserFavoriteView.as_view()),
-    path('test', Test.as_view()),
+    path('CommitCart', CommitCartView.as_view())
 ]

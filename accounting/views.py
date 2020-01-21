@@ -148,26 +148,21 @@ class RemoveUserFavoriteView(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-class Test(APIView):
-    def get(self, request):
-        with connection.cursor() as cursor:
-            try:
-                # cursor.execute(
-                #     "DELETE FROM Category WHERE categoryId=2;"
-                # )
-                # cursor.execute(
-                #     "INSERT INTO Category (name) VALUES ('Lebanese');"
-                # )
-                recordValue = ("best food", "tabakh", 40, 3)
-                cursor.execute(
-                    "INSERT INTO Shop (about_text, name, minimum_bill_value, addressId) VALUES (%s, %s, %s, %s);",
-                    recordValue
-                )
-                recordValue = (20, "it's all good", "shaverma", 3, 3)
-                cursor.execute(
-                    "INSERT INTO Food (price, about, name, categoryId, shopId) VALUES (%s, %s, %s, %s, %s);",
-                    recordValue
-                )
-            except Exception as ex:
-                raise ex
-        return Response(status=status.HTTP_200_OK)
+class CommitCartView(APIView):
+    def post(self, request):
+        try:
+            user = validateUserToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        data = request.data
+        if data.get("addressId") is None:
+            return Response({"detail": "addressId is required"}, status=status.HTTP_400_BAD_REQUEST)
+
+        addresses = user.getAddresses()
+        for address in addresses:
+            if address.addressId == data.get("addressId"):
+                user.cart.commit(data.get("discountId"), data.get("addressId"), user.wallet.walletId)
+                return Response(status=status.HTTP_200_OK)
+
+        return Response({"detail": "addressId not valid "}, status=status.HTTP_400_BAD_REQUEST)

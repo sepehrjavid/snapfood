@@ -49,6 +49,29 @@ class Cart(object):
             except Exception as ex:
                 raise ex
 
+    def commit(self, discountId, addressId, walletId):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (discountId, 4, walletId, addressId)
+                cursor.execute(
+                    "INSERT INTO Invoice (dicountId, statusId, walletId, addressId) VALUES (%s, %s, %s, %s);",
+                    recordValue
+                )
+                invoiceId = cursor.lastrowid
+                recordValue = (invoiceId, self.cartId)
+                cursor.execute(
+                    "INSERT INTO Food_Invoice_Isin (foodId, invoiceId) SELECT foodId, %s FROM Cart_Food_Isin \
+                    WHERE cartId=%s;",
+                    recordValue
+                )
+                recordValue = (self.cartId,)
+                cursor.execute(
+                    "DELETE FROM Cart_Food_Isin WHERE cartId=%s;",
+                    recordValue
+                )
+            except Exception as ex:
+                raise ex
+
     @property
     def data(self):
         return {
