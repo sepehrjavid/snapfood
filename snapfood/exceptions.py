@@ -21,3 +21,8 @@ class ObjectNotFoundException(Exception):
 class ObjectAlreadyExistsException(Exception):
     def __init__(self, message):
         super(ObjectAlreadyExistsException, self).__init__(message)
+
+
+class InsertNotAllowedException(Exception):
+    def __init__(self, message):
+        super(InsertNotAllowedException, self).__init__(message)

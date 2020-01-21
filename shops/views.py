@@ -36,4 +36,5 @@ class GetShopFoodView(APIView):
     def get(self, request, shopId):
         shop = Shop.getShopById(shopId)
         foods = shop.foods
-        return Response([x.data for x in foods])
+        out = {"foods": [x.data for x in foods], "categories": shop.categories}
+        return Response(out, status=status.HTTP_200_OK)

@@ -3,7 +3,7 @@ from django.db import connection
 from address.services import Address
 from shops.services import Food, Shop
 from snapfood.exceptions import NotValidatedException, NoValueForIdException, ObjectNotFoundException, \
-    ObjectAlreadyExistsException
+    ObjectAlreadyExistsException, InsertNotAllowedException
 
 
 class Cart(object):
@@ -35,6 +35,13 @@ class Cart(object):
 
         with connection.cursor() as cursor:
             try:
+                recordValue = (foodId,)
+                cursor.execute(
+                    "SELECT shopId FROM Food WHERE foodId=%s;", recordValue
+                )
+                shopId = cursor.fetchall()[0][0]
+                if shopId != self.foods[0].shopId:
+                    raise InsertNotAllowedException("Cannot have foods from different shops in cart")
                 recordValue = (foodId, self.cartId)
                 cursor.execute(
                     "INSERT INTO Cart_Food_Isin (foodId, cartId) VALUES (%s, %s);", recordValue

@@ -4,7 +4,8 @@ from rest_framework.views import APIView
 from django.db import connection
 
 from accounting.services import User
-from snapfood.exceptions import ValidationError, ObjectNotFoundException, ObjectAlreadyExistsException
+from snapfood.exceptions import ValidationError, ObjectNotFoundException, ObjectAlreadyExistsException, \
+    InsertNotAllowedException
 from snapfood.jwt import getUserToken, validateUserToken
 
 
@@ -87,6 +88,8 @@ class AddFoodToCartView(APIView):
         try:
             cart.addFood(data.get("foodId"))
         except ObjectNotFoundException as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+        except InsertNotAllowedException as ex:
             return Response({"detail": str(ex)}, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_200_OK)
 

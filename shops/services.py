@@ -148,6 +148,21 @@ class Shop(object):
                 raise ex
 
     @property
+    def categories(self):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (self.shopId,)
+                cursor.execute(
+                    "SELECT DISTINCT C.name FROM Shop INNER JOIN Food ON Food.shopId = Shop.shopId \
+                    INNER JOIN Category C on Food.categoryId = C.categoryId WHERE Shop.shopId=%s;",
+                    recordValue
+                )
+                result = cursor.fetchall()
+                return [x[0] for x in result]
+            except Exception as ex:
+                raise ex
+
+    @property
     def data(self):
         return {
             "shopId": self.shopId,
