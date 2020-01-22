@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from accounting.views import SignupView, LoginView, UserRetrieveView, UserUpdateView, GetUserCartView, \
-    AddFoodToCartView, GetUserFavoriteView, AddUserFavoriteView, RemoveUserFavoriteView, CommitCartView
+    AddFoodToCartView, GetUserFavoriteView, AddUserFavoriteView, RemoveUserFavoriteView, CommitCartView, \
+    DeleteFoodUserCart
 
 app_name = 'accounting'
 
@@ -15,5 +16,6 @@ urlpatterns = [
     path('GetUserFavorite', GetUserFavoriteView.as_view()),
     path('AddUserFavorite', AddUserFavoriteView.as_view()),
     path('RemoveUserFavorite', RemoveUserFavoriteView.as_view()),
-    path('CommitCart', CommitCartView.as_view())
+    path('CommitCart', CommitCartView.as_view()),
+    re_path(r'^RemoveFoodFromCart/(?P<foodId>\d+)$', DeleteFoodUserCart.as_view())
 ]

@@ -141,7 +141,7 @@ class Address(object):
             raise NotValidatedException
 
     def updateData(self, **kwargs):
-        fields = list(self.__dict__.keys())[:6]
+        fields = list(self.__dict__.keys())[:7]
         for field in fields:
             if field in kwargs.keys():
                 self.__dict__[field] = kwargs.get(field)

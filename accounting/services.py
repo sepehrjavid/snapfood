@@ -41,11 +41,22 @@ class Cart(object):
                     "SELECT shopId FROM Food WHERE foodId=%s;", recordValue
                 )
                 shopId = cursor.fetchall()[0][0]
-                if shopId != self.foods[0].shopId:
+                if self.foods != [] and shopId != self.foods[0].shopId:
                     raise InsertNotAllowedException("Cannot have foods from different shops in cart")
                 recordValue = (foodId, self.cartId)
                 cursor.execute(
                     "INSERT INTO Cart_Food_Isin (foodId, cartId) VALUES (%s, %s);", recordValue
+                )
+            except Exception as ex:
+                raise ex
+
+    def removeFood(self, food):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (food.foodId, self.cartId)
+                cursor.execute(
+                    "DELETE FROM Cart_Food_Isin WHERE foodId=%s AND cartId=%s;",
+                    recordValue
                 )
             except Exception as ex:
                 raise ex

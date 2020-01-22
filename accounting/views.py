@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.db import connection
 
 from accounting.services import User
 from snapfood.exceptions import ValidationError, ObjectNotFoundException, ObjectAlreadyExistsException, \
@@ -169,3 +168,19 @@ class CommitCartView(APIView):
                 return Response(status=status.HTTP_200_OK)
 
         return Response({"detail": "addressId not valid "}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteFoodUserCart(APIView):
+    def delete(self, request, foodId):
+        try:
+            user = validateUserToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        foodCart = user.cart.foods
+
+        for food in foodCart:
+            if food.foodId == int(foodId):
+                user.cart.removeFood(food)
+                return Response(status=status.HTTP_200_OK)
+        return Response({"detail": "Invalid foodId"}, status=status.HTTP_400_BAD_REQUEST)

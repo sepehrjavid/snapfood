@@ -207,17 +207,17 @@ class Shop(object):
     def _getQuery(key):
         if key == "category":
             return "SELECT DISTINCT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId \
-                    INNER JOIN Category C on F.categoryId = C.categoryId WHERE C.name=%s;"
+                    INNER JOIN Category C on F.categoryId = C.categoryId WHERE C.name LIKE %s;"
         elif key == "name":
-            return "SELECT * FROM Shop WHERE name=%s;"
+            return "SELECT * FROM Shop WHERE name LIKE %s;"
         elif key == "city":
             return "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
-                    INNER JOIN City C on A.cityId = C.cityId WHERE C.name=%s;"
+                    INNER JOIN City C on A.cityId = C.cityId WHERE C.name LIKE %s;"
         elif key == "foodName":
-            return "SELECT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId WHERE F.name=%s;"
+            return "SELECT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId WHERE F.name LIKE %s;"
         elif key == "territory":
             return "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
-            INNER JOIN Location L on A.locationId = L.locationId WHERE L.x=%s AND L.y=%s;"
+            INNER JOIN Location L on A.locationId = L.locationId WHERE L.x LIKE %s AND L.y LIKE %s;"
 
     @staticmethod
     def getShopsByQuery(key, value):
@@ -225,9 +225,9 @@ class Shop(object):
         with connection.cursor() as cursor:
             try:
                 if key == "territory":
-                    recordValue = (value.split()[0], value.split()[1])
+                    recordValue = ("%" + value.split()[0] + "%", "%" + value.split()[1] + "%")
                 else:
-                    recordValue = (value,)
+                    recordValue = ("%" + value + "%",)
                 cursor.execute(
                     query,
                     recordValue
