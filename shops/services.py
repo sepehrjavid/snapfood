@@ -217,7 +217,7 @@ class Shop(object):
             return "SELECT Shop.* FROM Shop INNER JOIN Food F on Shop.shopId = F.shopId WHERE F.name LIKE %s;"
         elif key == "territory":
             return "SELECT Shop.* FROM Shop INNER JOIN Address A on Shop.addressId = A.addressId \
-            INNER JOIN Location L on A.locationId = L.locationId WHERE L.x LIKE %s AND L.y LIKE %s;"
+            INNER JOIN Location L on A.locationId = L.locationId WHERE L.x BETWEEN %s AND %s AND L.y BETWEEN %s AND %s;"
 
     @staticmethod
     def getShopsByQuery(key, value):
@@ -225,7 +225,8 @@ class Shop(object):
         with connection.cursor() as cursor:
             try:
                 if key == "territory":
-                    recordValue = ("%" + value.split()[0] + "%", "%" + value.split()[1] + "%")
+                    recordValue = (float(value.split()[0]) - 100, float(value.split()[0]) + 100,
+                                   float(value.split()[1]) - 100, float(value.split()[1]) + 100)
                 else:
                     recordValue = ("%" + value + "%",)
                 cursor.execute(
@@ -233,6 +234,7 @@ class Shop(object):
                     recordValue
                 )
                 result = cursor.fetchall()
+                print(result)
                 return [Shop(shopId=shop[0], about_text=shop[1], name=shop[2], minimum_bill_value=shop[3],
                              addressId=shop[4]) for shop in result]
             except Exception as ex:

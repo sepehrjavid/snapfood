@@ -55,9 +55,16 @@ class Cart(object):
             try:
                 recordValue = (food.foodId, self.cartId)
                 cursor.execute(
-                    "DELETE FROM Cart_Food_Isin WHERE foodId=%s AND cartId=%s;",
+                    "SELECT id FROM Cart_Food_Isin WHERE foodId=%s AND cartId=%s;",
                     recordValue
                 )
+                result = cursor.fetchall()
+                if result:
+                    recordValue = (result[0][0],)
+                    cursor.execute(
+                        "DELETE FROM Cart_Food_Isin WHERE id=%s;",
+                        recordValue
+                    )
             except Exception as ex:
                 raise ex
 

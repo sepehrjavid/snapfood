@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f6b0797b-8212-45fd-b0f3-4fc4cb36460a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/e7f64711-7eae-4218-8171-6c8b41d29d82.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/e7f64711-7eae-4218-8171-6c8b41d29d82.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/invoice/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/invoice/services.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/invoice/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/invoice/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/invoice/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/invoice/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounting/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounting/services.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shops/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/shops/services.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -144,7 +145,7 @@
       <workItem from="1579417682718" duration="39000" />
       <workItem from="1579500917443" duration="32501000" />
       <workItem from="1579671575714" duration="15398000" />
-      <workItem from="1579866787482" duration="1392000" />
+      <workItem from="1579866787482" duration="5488000" />
     </task>
     <servers />
   </component>
