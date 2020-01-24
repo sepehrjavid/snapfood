@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from invoice.services import Invoice
 from snapfood.exceptions import ValidationError
 from snapfood.jwt import validateUserToken
 
@@ -67,3 +68,18 @@ class GetAllInvoicesView(APIView):
             out[-1]["totalPrice"] = price
 
         return Response(out, status=status.HTTP_200_OK)
+
+
+class GetMyInvoiceByShopIdView(APIView):
+    def get(self, request):
+        try:
+            user = validateUserToken(request)
+        except ValidationError as ex:
+            return Response({"detail": str(ex)}, status=status.HTTP_401_UNAUTHORIZED)
+
+        shopId = request.GET.get("shopId")
+        if shopId is None:
+            return Response({"detail": "shopId parameter is required"})
+
+        invoices = Invoice.getInvoiceByShopName(user, shopId)
+        return Response([x.data for x in invoices], status=status.HTTP_200_OK)

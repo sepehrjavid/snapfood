@@ -128,3 +128,22 @@ class Invoice(object):
             except Exception as ex:
                 raise ex
         self.commentId = comment.commentId
+
+    @staticmethod
+    def getInvoiceByShopName(user, shopId):
+        with connection.cursor() as cursor:
+            try:
+                recordValue = (shopId, user.wallet.walletId)
+                cursor.execute(
+                    "SELECT DISTINCT Invoice.* FROM Invoice \
+                    INNER JOIN Food_Invoice_Isin FII on Invoice.invoiceId = FII.invoiceId \
+                    INNER JOIN Food F on FII.foodId = F.foodId \
+                    INNER JOIN Shop S on F.shopId = S.shopId WHERE S.shopId=%s AND Invoice.walletId=%s;",
+                    recordValue
+                )
+                invoices = cursor.fetchall()
+                return [Invoice(invoiceId=invoice[0], discountId=invoice[1], commentId=invoice[2], statusId=invoice[3],
+                                walletId=invoice[4], addressId=invoice[5])
+                        for invoice in invoices]
+            except Exception as ex:
+                raise ex
